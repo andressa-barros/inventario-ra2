@@ -9,7 +9,7 @@ module Logica
     ) where
 
 import Tipos
-import qualified DataMap as Map
+import qualified Data.Map as Map
 import Data.Time (UTCTime) -- p poder escrever nas assinaturas
 
 -- se retorno de sucesso = (novo inventario + log)
@@ -24,7 +24,7 @@ addItem horario item inventario = case Map.lookup (itemID item) inventario of
     Just _ -> Left "id já existe"
     Nothing ->
         let novoInventario = Map.insert (itemID item) item inventario
-            logEntrada = LogEntry horario Add ("add" ++ show (quantidade item) ++ "x " ++ itemID item) Sucesso
+            logEntrada = LogEntry horario Add ("add " ++ show (quantidade item) ++ "x " ++ itemID item) Sucesso
         in Right (novoInventario, logEntrada)
 
 -- removeItem, remove certa qntd de um item
