@@ -9,5 +9,8 @@ module Logica
     ) where
 
 import Tipos
-import qualified Data.map as M 
+import qualified DataMap as Map
 import Data.Time (UTCTime) -- p poder escrever nas assinaturas
+
+-- se retorno de sucesso = (novo inventario + log)
+type ResultadoOperacao = (Inventario, LogEntry)
