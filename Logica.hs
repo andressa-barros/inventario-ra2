@@ -44,3 +44,17 @@ removeItem horario itemId quantidadeRemovida inventario = case Map.lookup itemId
                 novoInventario = Map.insert itemId itemAtualizado inventario
                 logEntrada = LogEntry horario Remove ("remove " ++ show quantidadeRemovida ++ "x " ++ itemId) Sucesso
             in Right (novoInventario, logEntrada)
+
+-- updateQty, att diretamente a qntd de um item (define nv valor)
+-- item precisa existir e qntd n pd ser negativa
+
+updateQty :: UTCTime -> String -> Int -> Inventario -> Either String ResultadoOperacao
+updateQty horario itemId quantidadeNova inventario = case Map.lookup itemId inventario of
+    Nothing -> Left "id nao encontrado"
+    Just item ->
+        if quantidadeNova < 0 then Left "quantidade negativa"
+        else
+            let itemAtualizado = item { quantidade = quantidadeNova }
+                novoInventario = Map.insert itemId itemAtualizado inventario
+                logEntrada = LogEntry horario Update ("update " ++ itemId ++ " -> " ++ show quantidadeNova) Sucesso
+            in Right (novoInventario, logEntrada)
