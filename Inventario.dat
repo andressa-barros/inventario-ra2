@@ -1,0 +1,1 @@
+fromList [("001",Item {itemID = "001", nome = "Teclado", quantidade = 0, categoria = "Periferico"}),("002",Item {itemID = "002", nome = "Mouse", quantidade = 7, categoria = "Periferico"})]
