@@ -127,5 +127,5 @@ main :: IO ()
 main = do
   inventario <- carregarInventario
   logs <- carregarLog
-  putStrLn "Sistema simples de inventário"
+  putStrLn "Inventário"
   loop inventario logs
