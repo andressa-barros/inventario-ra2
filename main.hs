@@ -7,6 +7,7 @@ import Data.Time (getCurrentTime, UTCTime)
 import Control.Exception (catch, IOException)
 import System.IO (readFile, writeFile)
 import System.IO.Error (isDoesNotExistError)
+import Relatorios
 
 arquivoInventario :: FilePath
 arquivoInventario = "Inventario.dat"
@@ -108,8 +109,15 @@ loop inv logs = do
       loop inv logs
 
     ("report":_) -> do
-      putStrLn "\nÚltimos 5 registros do log:"
-      mapM_ print (take 5 (reverse logs)) --mais recentes
+      putStrLn "\n1. Logs de erro:"
+      mapM_ print (logsDeErro logs) 
+      putStrLn "\n2. Item masi movimentado: "
+      print (itemMaisMovimentado logs)
+
+      putStr "\nDigite o ID do item para vizualisar o histórico: "
+      idItem <- getLine
+      putStrLn ("\nHistorico do item " ++ idItem ++ ":")
+      mapM_ print (historicoPorItem idItem logs)
       loop inv logs
 
     ("sair":_) -> putStrLn "Encerrando programa..." 
