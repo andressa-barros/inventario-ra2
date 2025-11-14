@@ -18,6 +18,8 @@ logsDeErro = filter (\logEntry -> case status logEntry of
 
 itemMaisMovimentado :: [LogEntry] -> Maybe (String, Int)
 itemMaisMovimentado logs =
-  let nomes = [last (words (detalhes l)) | l <- logs, let ws = words (detalhes l), not (null ws)]
+  let 
+      logsDeSucesso = filter (\l -> case status l of { Sucesso -> True; _ -> False }) logs
+      nomes = [last (words (detalhes l)) | l <- logsDeSucesso, let ws = words (detalhes l), not (null ws)]
       agrupado = map (\xs -> (head xs, length xs)) . group . sort $ nomes
   in if null agrupado then Nothing else Just (maximumBy (comparing snd) agrupado)
