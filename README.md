@@ -19,7 +19,9 @@ Dicentes:
 ---
 
 ## Como compilar e executar o projeto
+
 Compilação: use o comadno ghc main.hs
+
 Execução: use o comando .\Main.exe, ele tentará carregar Inventario.dat e Auditoria.log. Na primeira execução, criará estes arquivos.
 
 O programa entrará no loop principal, aguardando os comandos algum dos seguintes comandos:
