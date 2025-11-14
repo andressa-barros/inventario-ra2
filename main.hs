@@ -159,4 +159,4 @@ main = do
   inventario <- carregarInventario
   logs <- carregarLog
   putStrLn "Inventário"
-  loop inventario logs
+  loop inventario logs 
