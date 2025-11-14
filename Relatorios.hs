@@ -7,36 +7,36 @@ module Relatorios
 import Tipos
 import Data.List (sort, group)
 
--- Filtra os logs que têm o ID do item no texto
 historicoPorItem :: String -> [LogEntry] -> [LogEntry]
 historicoPorItem idItem logs =
   filter (\l -> idItem `elem` words (detalhes l)) logs
 
--- Retorna apenas os logs que são falhas
 logsDeErro :: [LogEntry] -> [LogEntry]
 logsDeErro logs =
   filter (\l -> case status l of
                   Falha _ -> True
                   _       -> False) logs
 
--- Encontra o item mais movimentado
 itemMaisMovimentado :: [LogEntry] -> Maybe (String, Int)
 itemMaisMovimentado logs =
   let
-      -- só pega logs que deram certo
       okLogs = filter (\l -> case status l of Sucesso -> True; _ -> False) logs
 
-      -- pega a última palavra do texto (que é o nome do item)
-      nomes = [ last (words (detalhes l))
-              | l <- okLogs
-              , not (null (words (detalhes l)))
+      nomes = [ last ws | l <- okLogs
+                        , let ws = words (detalhes l)
+                        , not (null ws)
               ]
 
-      -- agrupa iguais e conta
-      agrupado = map (\x -> (head x, length x)) (group (sort nomes))
+      -- Aqui tratamos padrão vazio só por segurança
+      contaLista []     = Nothing
+      contaLista (x:xs) = Just (x, 1 + length xs)
 
-      -- função simples para pegar o maior
+      agrupado = map contaLista (group (sort nomes))
+
+      -- remove os Nothings (não deve ter nenhum)
+      pares = [ p | Just p <- agrupado ]
+
       pegaMaior [] = Nothing
-      pegaMaior xs = Just (foldl1 (\a b -> if snd a >= snd b then a else b) xs)
+      pegaMaior (p:ps) = Just (foldl (\a b -> if snd b > snd a then b else a) p ps)
 
-  in pegaMaior agrupado
+  in pegaMaior pares
