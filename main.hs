@@ -3,7 +3,7 @@ module Main where
 import Tipos
 import Logica
 import qualified Data.Map as Map
-import Data.Time (getCurrentTime)
+import Data.Time (getCurrentTime, UTCTime)
 import Control.Exception (catch, IOException)
 import System.IO (readFile, writeFile, appendFile)
 import System.IO.Error (isDoesNotExistError)
@@ -17,10 +17,10 @@ arquivoLog = "Auditoria.log"
 -- Carregar inventário
 carregarInventario :: IO Inventario
 carregarInventario = catch
-  (do 
+  (do
     conteudo <- readFile arquivoInventario
     return (read conteudo :: Inventario))
-  (\e -> 
+  (\e ->
     if isDoesNotExistError e then do
       putStrLn "Inventario.dat não encontrado. Criando inventário vazio."
       return Map.empty
@@ -132,12 +132,14 @@ loop inv logs = do
 
     -- REPORT
     ("report":_) -> do
-      putStrLn "\nDigite o ID do item para visualizar o histórico:"
-      idItem <- getLine
-      putStrLn ("\nHistórico do item " ++ idItem ++ ":")
-      mapM_ print (historicoPorItem idItem logs)
-      putStrLn "\nItem mais movimentado:"
+      putStrLn "\n1. Logs de erro:"
+      mapM_ print (logsDeErro logs)
+      putStrLn "\n2. Item mais movimentado:"
       print (itemMaisMovimentado logs)
+      putStr "\nDigite o ID do item para visualizar o histórico: "
+      idItem <- getLine
+      putStrLn ("\nHistorico do item " ++ idItem ++ ":")
+      mapM_ print (historicoPorItem idItem logs)
       loop inv logs
 
     -- SAIR
@@ -159,4 +161,4 @@ main = do
   inventario <- carregarInventario
   logs <- carregarLog
   putStrLn "Inventário"
-  loop inventario logs 
+  loop inventario logs
